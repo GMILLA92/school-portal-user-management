@@ -1,0 +1,30 @@
+:root {
+  /* ===== Brand (enterprise blues) ===== */
+  --color-brand-900: #023050;
+  --color-brand-600: #2777A9;
+  --color-brand-300: #54A9D0;
+
+  /* ===== Base ===== */
+  --color-bg: #ffffff;
+  --color-fg: var(--color-brand-900); /* readable text */
+
+  --color-border: #e5e7eb;
+  --color-muted-fg: #6b7280;
+
+  /* ===== Primary actions ===== */
+  --color-primary: var(--color-brand-600);
+  --color-primary-hover: #1f5f87; /* slightly darker */
+  --color-primary-contrast: #ffffff;
+
+  /* ===== Accents / info ===== */
+  --color-accent: var(--color-brand-300);
+  --color-accent-soft: rgba(84, 169, 208, 0.15);
+
+  /* ===== Focus ===== */
+  --color-focus: var(--color-brand-300);
+
+  /* ===== Status ===== */
+  --color-danger: #b91c1c;
+  --color-danger-contrast: #ffffff;
+}
+
