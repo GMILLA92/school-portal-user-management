@@ -28,6 +28,11 @@ function hasRole(u: UserDTO, role: UserRole): boolean {
   return u.roles.includes(role);
 }
 
+const DEFAULT_ROLE: RoleOption = 'All';
+const DEFAULT_STATUS: StatusOption = 'All';
+const DEFAULT_PAGE_SIZE = 25;
+const DEFAULT_SORTING: SortingState = [{ id: 'name', desc: false }];
+
 export function DirectoryPage() {
   const { user } = useAuth();
   const isAdmin = user?.role === 'Admin';
@@ -36,13 +41,16 @@ export function DirectoryPage() {
 
   const [q, setQ] = React.useState('');
   const debouncedQ = useDebouncedValue(q, 250);
-  const [role, setRole] = React.useState<RoleOption>('All');
-  const [status, setStatus] = React.useState<StatusOption>('All');
+
+  const [role, setRole] = React.useState<RoleOption>(DEFAULT_ROLE);
+  const [status, setStatus] = React.useState<StatusOption>(DEFAULT_STATUS);
+
   const [page, setPage] = React.useState(1);
-  const [pageSize, setPageSize] = React.useState(25);
+  const [pageSize, setPageSize] = React.useState(DEFAULT_PAGE_SIZE);
 
-  const [sorting, setSorting] = React.useState<SortingState>([{ id: 'name', desc: false }]);
+  const [sorting, setSorting] = React.useState<SortingState>(DEFAULT_SORTING);
 
+  // Reset to first page whenever "query context" changes
   React.useEffect(() => {
     setPage(1);
   }, [debouncedQ, role, status, pageSize, sorting]);
@@ -77,12 +85,37 @@ export function DirectoryPage() {
     return filtered.slice(start, start + pageSize);
   }, [filtered, safePage, pageSize]);
 
+  const isDefaultSorting =
+    sorting.length === DEFAULT_SORTING.length &&
+    sorting[0]?.id === DEFAULT_SORTING[0]?.id &&
+    sorting[0]?.desc === DEFAULT_SORTING[0]?.desc;
+
+  const canReset =
+    q.trim() !== '' ||
+    role !== DEFAULT_ROLE ||
+    status !== DEFAULT_STATUS ||
+    pageSize !== DEFAULT_PAGE_SIZE ||
+    !isDefaultSorting;
+
+  const handleReset = () => {
+    setQ('');
+    setRole(DEFAULT_ROLE);
+    setStatus(DEFAULT_STATUS);
+    setPageSize(DEFAULT_PAGE_SIZE);
+    setSorting(DEFAULT_SORTING);
+    setPage(1);
+  };
+
+  const isTyping = q !== debouncedQ;
+
   return (
     <div className={styles.page}>
       <header className={styles.header}>
         <div>
           <h1 className={styles.title}>Directory</h1>
-          <div className={styles.subtle}>{isFetching ? 'Updating…' : ' '}</div>
+          <div className={styles.subtle}>
+            {isFetching ? 'Updating…' : isTyping ? 'Filtering…' : ' '}
+          </div>
         </div>
 
         <DirectoryToolbar
@@ -94,6 +127,8 @@ export function DirectoryPage() {
           onStatusChange={setStatus}
           pageSize={pageSize}
           onPageSizeChange={setPageSize}
+          canReset={canReset}
+          onReset={handleReset}
         />
       </header>
 

@@ -1,4 +1,7 @@
-import { Select } from '../../../shared/components/Select/Select';
+import { RotateCcw } from 'lucide-react';
+
+import { Button } from '../../../shared/components/Button';
+import { Select } from '../../../shared/components/Select';
 
 import styles from './DirectoryToolbar.module.scss';
 
@@ -20,6 +23,9 @@ interface Props {
 
   pageSize: number;
   onPageSizeChange: (value: number) => void;
+
+  onReset: () => void;
+  canReset: boolean;
 }
 
 export function DirectoryToolbar({
@@ -31,6 +37,8 @@ export function DirectoryToolbar({
   onStatusChange,
   pageSize,
   onPageSizeChange,
+  onReset,
+  canReset,
 }: Props) {
   return (
     <div className={styles.controls} aria-label="Directory controls">
@@ -77,6 +85,16 @@ export function DirectoryToolbar({
           </option>
         ))}
       </Select>
+
+      <Button
+        variant="ghostDanger"
+        onClick={onReset}
+        disabled={!canReset}
+        aria-label="Reset filters"
+      >
+        <RotateCcw size={16} strokeWidth={2} />
+        <span>Reset</span>
+      </Button>
     </div>
   );
 }
