@@ -7,9 +7,10 @@ export const DirectoryPage = () => {
   if (isError) return <div>Failed: {error.message}</div>;
 
   return (
-    <div style={{ padding: 16 }}>
+    <div>
       <h1>Directory</h1>
       <p>Users loaded: {data?.length ?? 0}</p>
+      <p>Next: Table UI + filters + actions</p>
     </div>
   );
 };
