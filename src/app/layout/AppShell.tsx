@@ -1,4 +1,6 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+
+import { useAuth } from '../../features/auth/AuthContext';
 
 import styles from './AppShell.module.scss';
 
@@ -13,6 +15,14 @@ const NAV: NavItem[] = [
 ];
 
 export const AppShell = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    void navigate('/login', { replace: true });
+  };
+
   return (
     <div className={styles.shell}>
       <header className={styles.topbar}>
@@ -22,10 +32,22 @@ export const AppShell = () => {
         </div>
 
         <div className={styles.topbarRight}>
-          <div className={styles.userPill} aria-label="Current user">
-            <span className={styles.userDot} aria-hidden="true" />
-            <span className={styles.userName}>Admin (mock)</span>
-          </div>
+          {user ? (
+            <>
+              <div className={styles.userPill} aria-label="Current user">
+                <span className={styles.userDot} aria-hidden="true" />
+                <span className={styles.userName}>
+                  {user.name} · {user.role}
+                </span>
+              </div>
+
+              <button type="button" className={styles.logout} onClick={handleLogout}>
+                Logout
+              </button>
+            </>
+          ) : (
+            <span className={styles.userName}>Signed out</span>
+          )}
         </div>
       </header>
 
