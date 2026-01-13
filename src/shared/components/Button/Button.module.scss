@@ -83,3 +83,36 @@
   cursor: not-allowed;
   transform: none;
 }
+
+.ghostDanger {
+  background: transparent;
+  border: none;
+  padding: 6px 8px;
+  width: auto;
+  color: var(--color-muted-fg);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ghostDanger:hover {
+  color: var(--color-danger);
+  background: rgba(185, 28, 28, 0.08);
+}
+
+.ghostDanger:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.button:disabled:hover {
+  background: transparent;
+  border-color: transparent;
+  color: var(--color-muted-fg);
+}
