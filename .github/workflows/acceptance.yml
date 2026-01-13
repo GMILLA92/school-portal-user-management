@@ -1,0 +1,33 @@
+name: Acceptance
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: acceptance-main
+  cancel-in-progress: true
+
+jobs:
+  acceptance:
+    name: Acceptance pipeline (later: Cypress)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Acceptance placeholder
+        run: echo "Acceptance tests will run here (Cypress) once configured"
