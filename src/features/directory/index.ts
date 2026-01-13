@@ -1,1 +1,1 @@
-export { DirectoryPage } from './DirectoryPage';
+export { DirectoryPage } from './pages/DirectoryPage';
