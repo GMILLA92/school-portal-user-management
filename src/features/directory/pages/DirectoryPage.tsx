@@ -7,6 +7,7 @@ import {
   type RoleOption,
   type StatusOption,
 } from '../components/DirectoryToolbar';
+import { useDirectorySelection } from '../hooks/useDirectorySelection';
 import { useAuth } from '../../auth/AuthContext';
 import { Button } from '../../../shared/components/Button';
 import { useDebouncedValue } from '../../../shared/hooks/useDebouncedValue';
@@ -38,6 +39,8 @@ export function DirectoryPage() {
   const isAdmin = user?.role === 'Admin';
 
   const { data, isLoading, isError, error, isFetching } = useUsersQuery();
+
+  const selection = useDirectorySelection();
 
   const [q, setQ] = React.useState('');
   const debouncedQ = useDebouncedValue(q, 250);
@@ -85,6 +88,23 @@ export function DirectoryPage() {
     return filtered.slice(start, start + pageSize);
   }, [filtered, safePage, pageSize]);
 
+  const pageRowIds = React.useMemo(() => pagedUsers.map((u) => u.id), [pagedUsers]);
+
+  const handleToggleRow = React.useCallback(
+    (id: string) => {
+      selection.toggleOne(id);
+    },
+    [selection],
+  );
+
+  const handleToggleAllPage = React.useCallback(
+    (checked: boolean) => {
+      if (checked) selection.selectMany(pageRowIds);
+      else selection.deselectMany(pageRowIds);
+    },
+    [selection, pageRowIds],
+  );
+
   const isDefaultSorting =
     sorting.length === DEFAULT_SORTING.length &&
     sorting[0]?.id === DEFAULT_SORTING[0]?.id &&
@@ -95,7 +115,8 @@ export function DirectoryPage() {
     role !== DEFAULT_ROLE ||
     status !== DEFAULT_STATUS ||
     pageSize !== DEFAULT_PAGE_SIZE ||
-    !isDefaultSorting;
+    !isDefaultSorting ||
+    selection.selectedCount > 0;
 
   const handleReset = () => {
     setQ('');
@@ -104,6 +125,7 @@ export function DirectoryPage() {
     setPageSize(DEFAULT_PAGE_SIZE);
     setSorting(DEFAULT_SORTING);
     setPage(1);
+    selection.clear();
   };
 
   const isTyping = q !== debouncedQ;
@@ -134,7 +156,14 @@ export function DirectoryPage() {
 
       <section className={styles.card}>
         <div className={styles.cardTop}>
-          <div className={styles.count}>{total.toLocaleString()} users</div>
+          <div className={styles.count}>
+            {total.toLocaleString()} users
+            {selection.selectedCount > 0 ? (
+              <span className={styles.selectedPill}>
+                {selection.selectedCount} selected (this page)
+              </span>
+            ) : null}
+          </div>
 
           <div className={styles.pager}>
             <Button
@@ -173,6 +202,10 @@ export function DirectoryPage() {
             isAdmin={isAdmin}
             sorting={sorting}
             onSortingChange={setSorting}
+            selectedIds={selection.selectedIds}
+            onToggleRow={handleToggleRow}
+            pageRowIds={pageRowIds}
+            onToggleAllPage={handleToggleAllPage}
           />
         )}
       </section>

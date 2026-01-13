@@ -35,8 +35,12 @@
 }
 
 .count {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
   font-size: 14px;
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 .pager {

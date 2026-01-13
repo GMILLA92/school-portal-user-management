@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   flexRender,
   getCoreRowModel,
@@ -21,11 +20,24 @@ interface Props {
   isAdmin: boolean;
   sorting: SortingState;
   onSortingChange: OnChangeFn<SortingState>;
+  selectedIds: Set<string>;
+  onToggleRow: (id: string) => void;
+  pageRowIds: string[];
+  onToggleAllPage: (checked: boolean) => void;
 }
 
-export function DirectoryTable({ data, isAdmin, sorting, onSortingChange }: Props) {
-  const columns = React.useMemo<ColumnDef<UserDTO>[]>(
-    () => [
+export function DirectoryTable({
+  data,
+  isAdmin,
+  sorting,
+  onSortingChange,
+  selectedIds,
+  onToggleRow,
+  pageRowIds,
+  onToggleAllPage,
+}: Props) {
+  const columns = React.useMemo<ColumnDef<UserDTO>[]>(() => {
+    return [
       {
         id: 'name',
         header: 'Name',
@@ -54,9 +66,9 @@ export function DirectoryTable({ data, isAdmin, sorting, onSortingChange }: Prop
         sortingFn: 'alphanumeric',
       },
       { accessorKey: 'status', header: 'Status' },
-    ],
-    [],
-  );
+    ];
+  }, []);
+
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
@@ -67,9 +79,23 @@ export function DirectoryTable({ data, isAdmin, sorting, onSortingChange }: Prop
     getSortedRowModel: getSortedRowModel(),
   });
 
+  const allOnPageSelected = pageRowIds.length > 0 && pageRowIds.every((id) => selectedIds.has(id));
+
+  const headerCheckboxRef = React.useRef<HTMLInputElement>(null);
+
   return (
     <div className={styles.table}>
       <div className={styles.headerRow} role="row">
+        <div className={styles.checkboxHeader}>
+          <input
+            type="checkbox"
+            aria-label="Select all rows on this page"
+            checked={allOnPageSelected}
+            ref={headerCheckboxRef}
+            onChange={(e) => onToggleAllPage(e.target.checked)}
+          />
+        </div>
+
         {table.getHeaderGroups().map((hg) =>
           hg.headers.map((header) => {
             const canSort = header.column.getCanSort();
@@ -81,9 +107,7 @@ export function DirectoryTable({ data, isAdmin, sorting, onSortingChange }: Prop
                   <Button
                     variant="ghost"
                     className={styles.sortBtn}
-                    onClick={() => {
-                      header.column.toggleSorting(sorted === 'asc');
-                    }}
+                    onClick={() => header.column.toggleSorting(sorted === 'asc')}
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
                     {sorted === 'asc' ? ' ▲' : sorted === 'desc' ? ' ▼' : ''}
@@ -107,41 +131,56 @@ export function DirectoryTable({ data, isAdmin, sorting, onSortingChange }: Prop
         <div className={styles.state}>No users match your filters.</div>
       ) : (
         <div className={styles.body}>
-          {table.getRowModel().rows.map((row) => (
-            <div key={row.id} className={styles.row} role="row">
-              {row.getVisibleCells().map((cell) => {
-                if (cell.column.id === 'status') {
-                  const v = String(cell.getValue());
-                  const statusCls =
-                    v === 'Active'
-                      ? styles.statusActive
-                      : v === 'Invited'
-                        ? styles.statusInvited
-                        : v === 'Suspended'
-                          ? styles.statusSuspended
-                          : styles.statusArchived;
+          {table.getRowModel().rows.map((row) => {
+            const user = row.original;
+
+            return (
+              <div key={row.id} className={styles.row} role="row">
+                <div className={styles.checkboxCell}>
+                  <input
+                    type="checkbox"
+                    aria-label={`Select ${user.firstName} ${user.lastName}`}
+                    checked={selectedIds.has(user.id)}
+                    onChange={() => onToggleRow(user.id)}
+                  />
+                </div>
+
+                {row.getVisibleCells().map((cell) => {
+                  if (cell.column.id === 'status') {
+                    const v = String(cell.getValue());
+                    const statusCls =
+                      v === 'Active'
+                        ? styles.statusActive
+                        : v === 'Invited'
+                          ? styles.statusInvited
+                          : v === 'Suspended'
+                            ? styles.statusSuspended
+                            : styles.statusArchived;
+
+                    return (
+                      <div key={cell.id} className={styles.cell}>
+                        <span className={`${styles.statusPill} ${statusCls}`}>{v}</span>
+                      </div>
+                    );
+                  }
 
                   return (
                     <div key={cell.id} className={styles.cell}>
-                      <span className={`${styles.statusPill} ${statusCls}`}>{v}</span>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </div>
                   );
-                }
+                })}
 
-                return (
-                  <div key={cell.id} className={styles.cell}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </div>
-                );
-              })}
-
-              <div className={styles.actionsCell}>
-                <Button variant="secondary" disabled={!isAdmin}>
-                  Edit
-                </Button>
+                <div className={styles.actionsCell}>
+                  {isAdmin ? (
+                    <Button variant="secondary">Edit</Button>
+                  ) : (
+                    <Button variant="secondary">View</Button>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
