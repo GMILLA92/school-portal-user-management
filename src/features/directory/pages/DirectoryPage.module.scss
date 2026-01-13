@@ -1,0 +1,101 @@
+.page {
+  display: grid;
+  gap: 12px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.title {
+  margin: 0;
+}
+
+.subtle {
+  opacity: 0.75;
+  font-size: 14px;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.count {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.pager {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pageText {
+  font-size: 14px;
+}
+
+.state {
+  padding: 12px;
+  opacity: 0.8;
+}
+
+.error {
+  color: crimson;
+}
+
+.table {
+  display: grid;
+  gap: 6px;
+}
+
+.headerRow {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr 1fr 140px;
+  font-weight: 600;
+  align-items: center;
+}
+
+.sortBtn {
+  text-align: left;
+}
+
+.actionsHeader {
+  text-align: right;
+}
+
+.divider {
+  border-top: 1px solid #eee;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr 1fr 140px;
+  padding: 6px 0;
+  align-items: center;
+}
+
+.actionsCell {
+  text-align: right;
+}
