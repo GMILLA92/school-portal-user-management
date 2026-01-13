@@ -1,0 +1,151 @@
+.table {
+  display: grid;
+  gap: 8px;
+}
+
+.headerRow {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr 1fr 140px;
+  align-items: center;
+  padding: 10px 12px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-bg);
+}
+
+.headerCell {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.sortBtn {
+  /* make ghost buttons feel like header labels */
+  padding: 6px 8px;
+  border-radius: 10px;
+  font-weight: 800;
+  color: var(--color-fg);
+}
+
+.sortBtn:hover {
+  background: var(--color-accent-soft);
+  color: var(--color-primary);
+}
+
+.actionsHeader {
+  text-align: right;
+  padding-right: 4px;
+  color: var(--color-muted-fg);
+  font-weight: 800;
+}
+
+.body {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr 1fr 140px;
+  align-items: center;
+
+  padding: 10px 12px;
+  border-top: 1px solid var(--color-border);
+}
+
+.row:first-child {
+  border-top: none;
+}
+
+.row:nth-child(even) {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.row:hover {
+  background: var(--color-accent-soft);
+}
+
+.cell {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nameCell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.name {
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pronouns {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-muted-fg);
+  line-height: 1;
+}
+
+.muted {
+  color: var(--color-muted-fg);
+  font-weight: 600;
+}
+
+.statusPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  font-weight: 800;
+  font-size: 12px;
+}
+
+.statusActive {
+  background: var(--color-success-soft);
+  border-color: rgba(21, 128, 61, 0.35);
+  color: var(--color-success);
+}
+
+.statusInvited {
+  background: rgba(84, 169, 208, 0.14);
+  border-color: rgba(84, 169, 208, 0.35);
+  color: var(--color-primary);
+}
+
+.statusSuspended {
+  background: rgba(185, 28, 28, 0.10);
+  border-color: rgba(185, 28, 28, 0.30);
+  color: var(--color-danger);
+}
+
+
+.statusArchived {
+  background: rgba(107, 114, 128, 0.12);
+  border-color: rgba(107, 114, 128, 0.35);
+  color: var(--color-muted-fg);
+}
+
+.actionsCell {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.state {
+  padding: 14px 12px;
+  opacity: 0.85;
+  color: var(--color-muted-fg);
+}
