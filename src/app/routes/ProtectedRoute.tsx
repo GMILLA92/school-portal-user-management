@@ -3,13 +3,14 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../features/auth/AuthContext';
 
 import type { ReactElement } from 'react';
+import type { AuthRole } from '../../features/auth/types';
 
 export const ProtectedRoute = ({
   children,
-  requireAdmin,
+  allowedRoles,
 }: {
   children: ReactElement;
-  requireAdmin?: boolean;
+  allowedRoles?: AuthRole[];
 }) => {
   const { user } = useAuth();
   const location = useLocation();
@@ -18,7 +19,7 @@ export const ProtectedRoute = ({
     return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   }
 
-  if (requireAdmin && user.role !== 'Admin') {
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
     return <Navigate to="/forbidden" replace />;
   }
 

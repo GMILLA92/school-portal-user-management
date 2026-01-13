@@ -21,7 +21,7 @@ export const router = createBrowserRouter([
       {
         path: 'directory',
         element: (
-          <ProtectedRoute requireAdmin>
+          <ProtectedRoute allowedRoles={['Admin', 'Teacher']}>
             <DirectoryPage />
           </ProtectedRoute>
         ),
