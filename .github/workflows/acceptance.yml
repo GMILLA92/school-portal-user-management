@@ -3,7 +3,8 @@ name: Acceptance
 on:
   push:
     branches: [main]
-
+  workflow_dispatch:
+  
 concurrency:
   group: acceptance-main
   cancel-in-progress: true
