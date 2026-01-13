@@ -2,20 +2,18 @@ import * as React from 'react';
 
 import { useUsersQuery } from '../api/useUsersQuery';
 import { DirectoryTable } from '../components/DirectoryTable';
+import {
+  DirectoryToolbar,
+  type RoleOption,
+  type StatusOption,
+} from '../components/DirectoryToolbar';
 import { useAuth } from '../../auth/AuthContext';
+import { Button } from '../../../shared/components/Button';
 
 import styles from './DirectoryPage.module.scss';
 
 import type { SortingState } from '@tanstack/react-table';
 import type { UserDTO, UserRole, UserStatus } from '../../users/model';
-import { Button } from '../../../shared/components/Button';
-import { Select } from '../../../shared/components/Select/Select';
-
-const ROLE_OPTIONS = ['All', 'Student', 'Teacher', 'Guardian', 'Staff', 'Admin'] as const;
-type RoleOption = (typeof ROLE_OPTIONS)[number];
-
-const STATUS_OPTIONS = ['All', 'Active', 'Invited', 'Suspended', 'Archived'] as const;
-type StatusOption = (typeof STATUS_OPTIONS)[number];
 
 function fullName(u: UserDTO): string {
   return `${u.firstName} ${u.lastName}`.trim();
@@ -43,14 +41,12 @@ export function DirectoryPage() {
 
   const [sorting, setSorting] = React.useState<SortingState>([{ id: 'name', desc: false }]);
 
-  // Reset page when inputs change
   React.useEffect(() => {
     setPage(1);
   }, [q, role, status, pageSize, sorting]);
 
   const allUsers = React.useMemo<UserDTO[]>(() => data ?? [], [data]);
 
-  // Filter only. Sorting is handled inside DirectoryTable via react-table.
   const filtered = React.useMemo<UserDTO[]>(() => {
     let rows: UserDTO[] = allUsers;
 
@@ -87,51 +83,16 @@ export function DirectoryPage() {
           <div className={styles.subtle}>{isFetching ? 'Updating…' : ' '}</div>
         </div>
 
-        <div className={styles.controls}>
-          <input
-            className={`${styles.control} ${styles.search}`}
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="Search name or email…"
-            aria-label="Search users"
-          />
-
-          <Select
-            aria-label="Filter by role"
-            value={role}
-            onChange={(e) => setRole(e.target.value as RoleOption)}
-          >
-            {ROLE_OPTIONS.map((r) => (
-              <option key={r} value={r}>
-                {r === 'All' ? 'All roles' : r}
-              </option>
-            ))}
-          </Select>
-
-          <Select
-            value={status}
-            onChange={(e) => setStatus(e.target.value as StatusOption)}
-            aria-label="Filter by status"
-          >
-            {STATUS_OPTIONS.map((s) => (
-              <option key={s} value={s}>
-                {s === 'All' ? 'All statuses' : s}
-              </option>
-            ))}
-          </Select>
-
-          <Select
-            value={String(pageSize)}
-            onChange={(e) => setPageSize(Number(e.target.value))}
-            aria-label="Page size"
-          >
-            {[10, 25, 50, 100].map((n) => (
-              <option key={n} value={String(n)}>
-                {n} / page
-              </option>
-            ))}
-          </Select>
-        </div>
+        <DirectoryToolbar
+          q={q}
+          onQChange={setQ}
+          role={role}
+          onRoleChange={setRole}
+          status={status}
+          onStatusChange={setStatus}
+          pageSize={pageSize}
+          onPageSizeChange={setPageSize}
+        />
       </header>
 
       <section className={styles.card}>

@@ -1,0 +1,31 @@
+.controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.search {
+  appearance: none;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-weight: 700;
+  line-height: 1;
+  width: 260px;
+  max-width: 60vw;
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+
+.search:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-accent-soft);
+}
+
+.search:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
