@@ -9,6 +9,7 @@ import {
 } from '../components/DirectoryToolbar';
 import { useAuth } from '../../auth/AuthContext';
 import { Button } from '../../../shared/components/Button';
+import { useDebouncedValue } from '../../../shared/hooks/useDebouncedValue';
 
 import styles from './DirectoryPage.module.scss';
 
@@ -34,6 +35,7 @@ export function DirectoryPage() {
   const { data, isLoading, isError, error, isFetching } = useUsersQuery();
 
   const [q, setQ] = React.useState('');
+  const debouncedQ = useDebouncedValue(q, 250);
   const [role, setRole] = React.useState<RoleOption>('All');
   const [status, setStatus] = React.useState<StatusOption>('All');
   const [page, setPage] = React.useState(1);
@@ -43,14 +45,14 @@ export function DirectoryPage() {
 
   React.useEffect(() => {
     setPage(1);
-  }, [q, role, status, pageSize, sorting]);
+  }, [debouncedQ, role, status, pageSize, sorting]);
 
   const allUsers = React.useMemo<UserDTO[]>(() => data ?? [], [data]);
 
   const filtered = React.useMemo<UserDTO[]>(() => {
     let rows: UserDTO[] = allUsers;
 
-    const query = q.trim();
+    const query = debouncedQ.trim();
     if (query) {
       rows = rows.filter((u) => includesCI(fullName(u), query) || includesCI(u.email ?? '', query));
     }
@@ -64,7 +66,7 @@ export function DirectoryPage() {
     }
 
     return rows;
-  }, [allUsers, q, role, status]);
+  }, [allUsers, debouncedQ, role, status]);
 
   const total = filtered.length;
   const pageCount = Math.max(1, Math.ceil(total / pageSize));
