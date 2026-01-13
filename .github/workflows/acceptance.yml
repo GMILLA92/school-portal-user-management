@@ -3,15 +3,15 @@ name: Acceptance
 on:
   push:
     branches: [main]
-  workflow_dispatch:
-  
+  workflow_dispatch: {}
+
 concurrency:
   group: acceptance-main
   cancel-in-progress: true
 
 jobs:
   acceptance:
-    name: Acceptance pipeline (later: Cypress)
+    name: Acceptance pipeline (later Cypress)
     runs-on: ubuntu-latest
 
     steps:
