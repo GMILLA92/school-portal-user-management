@@ -1,6 +1,8 @@
 import * as React from 'react';
 
+import { useBulkUpdateUsersMutation } from '../api/useBulkUpdateUsersMutation';
 import { useUsersQuery } from '../api/useUsersQuery';
+import { BulkActions } from '../components/BulkActions';
 import { DirectoryTable } from '../components/DirectoryTable';
 import {
   DirectoryToolbar,
@@ -15,7 +17,7 @@ import { useDebouncedValue } from '../../../shared/hooks/useDebouncedValue';
 import styles from './DirectoryPage.module.scss';
 
 import type { SortingState } from '@tanstack/react-table';
-import type { UserDTO, UserRole, UserStatus } from '../../users/model';
+import type { UpdateUserPayload, UserDTO, UserRole, UserStatus } from '../../users/model';
 
 function fullName(u: UserDTO): string {
   return `${u.firstName} ${u.lastName}`.trim();
@@ -41,6 +43,7 @@ export function DirectoryPage() {
   const { data, isLoading, isError, error, isFetching } = useUsersQuery();
 
   const selection = useDirectorySelection();
+  const bulkUpdate = useBulkUpdateUsersMutation();
 
   const [q, setQ] = React.useState('');
   const debouncedQ = useDebouncedValue(q, 250);
@@ -103,6 +106,32 @@ export function DirectoryPage() {
       else selection.deselectMany(pageRowIds);
     },
     [selection, pageRowIds],
+  );
+
+  const applyBulk = React.useCallback(
+    async (payload: UpdateUserPayload) => {
+      const ids = Array.from(selection.selectedIds);
+      if (ids.length === 0) return;
+
+      await bulkUpdate.mutateAsync({ ids, payload });
+      selection.clear();
+    },
+    [bulkUpdate, selection],
+  );
+
+  const handleBulkSetRole = React.useCallback(
+    (nextRole: UserRole) => {
+      const roles: UserRole[] = nextRole === 'Admin' ? ['Admin', 'Staff'] : [nextRole];
+      void applyBulk({ roles });
+    },
+    [applyBulk],
+  );
+
+  const handleBulkSetStatus = React.useCallback(
+    (nextStatus: UserStatus) => {
+      void applyBulk({ status: nextStatus });
+    },
+    [applyBulk],
   );
 
   const isDefaultSorting =
@@ -187,6 +216,23 @@ export function DirectoryPage() {
             </Button>
           </div>
         </div>
+
+        {selection.selectedCount > 0 ? (
+          <BulkActions
+            selectedCount={selection.selectedCount}
+            isAdmin={isAdmin}
+            isPending={bulkUpdate.isPending}
+            onClear={selection.clear}
+            onSetRole={handleBulkSetRole}
+            onSetStatus={handleBulkSetStatus}
+          />
+        ) : null}
+
+        {bulkUpdate.isError ? (
+          <div role="alert" className={styles.error}>
+            {bulkUpdate.error.message}
+          </div>
+        ) : null}
 
         {isLoading && <div className={styles.state}>Loading users…</div>}
 

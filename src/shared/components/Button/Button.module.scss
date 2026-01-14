@@ -46,6 +46,19 @@
   filter: brightness(0.95);
 }
 
+.warning {
+  background: var(--color-warning);
+  border-color: var(--color-warning);
+  color: var(--color-warning-contrast);
+  padding: 4px 10px;
+}
+
+.warning:hover {
+  background: var(--color-warning-hover);
+  border-color: var(--color-warning-hover);
+}
+
+
 .ghost {
   background: transparent;
   border: none;
