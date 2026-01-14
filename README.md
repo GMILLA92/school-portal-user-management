@@ -11,7 +11,7 @@ For now, two charts are included as simple examples of how analytics could be pr
 
 Built to demonstrate:
 - Solid frontend architecture
-- Performance optimisations
+- Performance optimizations
 - Testing strategies
 - CI quality gates
 
