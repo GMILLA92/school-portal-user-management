@@ -127,6 +127,23 @@ const DEPARTMENTS = [
   'Support',
 ];
 
+const CAMPUSES = ['North', 'South'] as const;
+const pickCampus = (rand: () => number) => CAMPUSES[Math.floor(rand() * CAMPUSES.length)];
+
+const makePhone = (rand: () => number) => {
+  const n = () => Math.floor(rand() * 10);
+  return `+1 (555) ${n()}${n()}${n()}-${n()}${n()}${n()}${n()}`;
+};
+
+const NOTES = [
+  'Prefers email contact.',
+  'Needs accessibility accommodations.',
+  'New enrolment this term.',
+  'Onboarding in progress.',
+  'Part-time schedule.',
+  'Emergency contact verified.',
+];
+
 const pick = <T>(arr: T[], idx: number) => arr[idx % arr.length];
 
 // deterministic PRNG
@@ -224,6 +241,10 @@ const generateUsers = (count: number, seed = 42): UserDTO[] => {
 
     const pronouns = pick(PRONOUNS, Math.floor(rand() * 1000) + i);
 
+    const campus = pickCampus(rand);
+    const phone = makePhone(rand);
+    const notes = rand() < 0.35 ? pick(NOTES, Math.floor(rand() * 1000) + i) : undefined;
+
     // role-specific fields + email patterns
     let email = '';
     let grade: number | undefined;
@@ -264,6 +285,9 @@ const generateUsers = (count: number, seed = 42): UserDTO[] => {
       grade,
       homeroom,
       department,
+      campus,
+      phone,
+      notes,
     });
   }
 

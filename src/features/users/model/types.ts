@@ -4,6 +4,8 @@ export type UserStatus = 'Active' | 'Invited' | 'Suspended' | 'Archived';
 
 export type Pronouns = 'she/her' | 'he/him' | 'they/them' | 'prefer not to say';
 
+export type Campus = 'North' | 'South';
+
 export interface UserDTO {
   id: string;
   firstName: string;
@@ -18,6 +20,11 @@ export interface UserDTO {
   grade?: number; // Only for students
   homeroom?: string; // Only for students
   department?: string; // Only for teachers/Staff
+
+  phone?: string;
+  campus?: Campus;
+  notes?: string;
+  guardianOfStudentId?: string; // Only for Guardian
 }
 
 export interface User {

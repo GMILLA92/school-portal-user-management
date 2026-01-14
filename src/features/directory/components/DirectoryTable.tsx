@@ -8,6 +8,7 @@ import {
   type OnChangeFn,
 } from '@tanstack/react-table';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { Button } from '../../../shared/components/Button';
 
@@ -82,6 +83,8 @@ export function DirectoryTable({
   const allOnPageSelected = pageRowIds.length > 0 && pageRowIds.every((id) => selectedIds.has(id));
 
   const headerCheckboxRef = React.useRef<HTMLInputElement>(null);
+
+  const navigate = useNavigate();
 
   return (
     <div className={styles.table}>
@@ -170,13 +173,24 @@ export function DirectoryTable({
                     </div>
                   );
                 })}
-
                 <div className={styles.actionsCell}>
+                  <Button
+                    variant="secondary"
+                    onClick={() => {
+                      void navigate(`/directory/${user.id}`);
+                    }}
+                  >
+                    View
+                  </Button>
+
                   {isAdmin ? (
-                    <Button variant="secondary">Edit</Button>
-                  ) : (
-                    <Button variant="secondary">View</Button>
-                  )}
+                    <Button
+                      variant="secondary"
+                      onClick={() => void navigate(`/directory/${user.id}?mode=edit`)}
+                    >
+                      Edit
+                    </Button>
+                  ) : null}
                 </div>
               </div>
             );
