@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
-import type { UsersQueryParams } from '../model/directory.types';
 import type { UserDTO } from '../../users/model';
+
+export const usersQueryKey = ['users'] as const;
 
 async function fetchUsers(signal?: AbortSignal): Promise<UserDTO[]> {
   const res = await fetch('/api/users', { headers: { Accept: 'application/json' }, signal });
@@ -9,13 +10,9 @@ async function fetchUsers(signal?: AbortSignal): Promise<UserDTO[]> {
   return (await res.json()) as UserDTO[];
 }
 
-export function usersQueryKey(params: UsersQueryParams) {
-  return ['users', params] as const;
-}
-
 export function useUsersQuery() {
   return useQuery<UserDTO[], Error>({
-    queryKey: ['users'],
+    queryKey: usersQueryKey,
     queryFn: ({ signal }) => fetchUsers(signal),
     staleTime: 30_000,
   });
