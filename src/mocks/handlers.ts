@@ -162,28 +162,24 @@ const isoDaysAgo = (daysAgo: number) => {
 const slugify = (s: string) => s.toLowerCase().replace(/[^a-z]/g, '');
 
 const currentSchoolYear = () => {
-  // Simple rule: school year flips around Aug/Sep
   const now = new Date();
   const year = now.getFullYear();
-  const month = now.getMonth(); // 0-based
+  const month = now.getMonth();
   return month >= 7 ? year : year - 1;
 };
 
 const calcGradYear = (grade: number) => {
-  // grade 12 graduates this school year + 0, grade 11 +1, etc.
   const base = currentSchoolYear();
   return base + (12 - grade);
 };
 
 const makeStudentEmail = (idNum: number, grade: number) => {
   const grad = calcGradYear(grade);
-  // e.g. s2028-0042@northridge.edu
   return `s${grad}-${String(idNum).padStart(4, '0')}@northridge.edu`;
 };
 
 const makeStaffEmail = (first: string, last: string, collision: number) => {
   const base = `${slugify(first)}.${slugify(last)}`;
-  // avoid duplicates deterministically
   return collision === 0 ? `${base}@northridge.edu` : `${base}${collision}@northridge.edu`;
 };
 
@@ -193,8 +189,6 @@ const makeGuardianEmail = (first: string, last: string, collision: number) => {
 };
 
 const statusForRole = (rand: () => number, role: UserRole): UserStatus => {
-  // Keep most users active, some invited, fewer suspended/archived
-  // Admins/staff less likely to be invited
   const roll = rand();
   const invitedWeight = role === 'Student' || role === 'Guardian' ? 0.12 : 0.05;
 
@@ -294,7 +288,6 @@ const generateUsers = (count: number, seed = 42): UserDTO[] => {
   return users;
 };
 
-// In-memory "DB" for mocks
 const USERS_DB: UserDTO[] = generateUsers(200);
 
 export const handlers = [
@@ -307,7 +300,7 @@ export const handlers = [
 
     const body = (await request.json().catch(() => null)) as UpdateUserPayload | null;
 
-    if (!body) {
+    if (!body || (!body.roles && !body.status)) {
       return new HttpResponse(null, { status: 400 });
     }
 

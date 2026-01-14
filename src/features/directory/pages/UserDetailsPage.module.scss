@@ -113,3 +113,20 @@
   color: var(--color-muted-fg);
   height: 29px;
 }
+
+.headerActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.grid :global(select) {
+  min-width: 220px;
+}
+
+.compactSelect {
+  margin-top: 3px;
+  width: 220px;
+  max-width: 100%;
+}
