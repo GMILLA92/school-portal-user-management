@@ -30,4 +30,11 @@
   /* ===== Success ===== */
   --color-success: #15803d;
   --color-success-soft: rgba(21, 128, 61, 0.12);
+
+   /* ===== Warning / Clear actions ===== */
+  --color-warning: #d97706; /* amber-600 */
+  --color-warning-hover: #b45309; /* amber-700 */
+  --color-warning-contrast: #ffffff;
+
+  --color-warning-soft: rgba(217, 119, 6, 0.14);
 }
