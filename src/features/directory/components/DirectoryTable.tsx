@@ -7,6 +7,7 @@ import {
   useReactTable,
   type OnChangeFn,
 } from '@tanstack/react-table';
+import { useWindowVirtualizer } from '@tanstack/react-virtual';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -80,11 +81,41 @@ export function DirectoryTable({
     getSortedRowModel: getSortedRowModel(),
   });
 
-  const allOnPageSelected = pageRowIds.length > 0 && pageRowIds.every((id) => selectedIds.has(id));
+  const rows = table.getRowModel().rows;
 
+  const allOnPageSelected = pageRowIds.length > 0 && pageRowIds.every((id) => selectedIds.has(id));
   const headerCheckboxRef = React.useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
+
+  const bodyRef = React.useRef<HTMLDivElement | null>(null);
+  const [scrollMargin, setScrollMargin] = React.useState(0);
+
+  React.useLayoutEffect(() => {
+    const el = bodyRef.current;
+    if (!el) return;
+
+    const top = el.getBoundingClientRect().top + window.scrollY;
+    setScrollMargin(top);
+  }, [rows.length, sorting]);
+
+  const rowVirtualizer = useWindowVirtualizer({
+    count: rows.length,
+    estimateSize: () => 44, // close to your current row height; adjust if needed
+    overscan: 10,
+    scrollMargin,
+  });
+
+  const virtualItems = rowVirtualizer.getVirtualItems();
+  const totalSize = rowVirtualizer.getTotalSize();
+
+  const paddingTop =
+    virtualItems.length > 0 ? Math.max(0, virtualItems[0].start - scrollMargin) : 0;
+
+  const paddingBottom =
+    virtualItems.length > 0
+      ? Math.max(0, totalSize - (virtualItems[virtualItems.length - 1].end - scrollMargin))
+      : 0;
 
   return (
     <div className={styles.table}>
@@ -102,7 +133,7 @@ export function DirectoryTable({
         {table.getHeaderGroups().map((hg) =>
           hg.headers.map((header) => {
             const canSort = header.column.getCanSort();
-            const sorted = header.column.getIsSorted(); // false | 'asc' | 'desc'
+            const sorted = header.column.getIsSorted();
 
             return (
               <div key={header.id} className={styles.headerCell}>
@@ -130,11 +161,14 @@ export function DirectoryTable({
 
       <div className={styles.divider} />
 
-      {table.getRowModel().rows.length === 0 ? (
+      {rows.length === 0 ? (
         <div className={styles.state}>No users match your filters.</div>
       ) : (
-        <div className={styles.body}>
-          {table.getRowModel().rows.map((row) => {
+        <div ref={bodyRef} className={styles.body}>
+          {paddingTop > 0 ? <div style={{ height: paddingTop }} /> : null}
+
+          {virtualItems.map((v) => {
+            const row = rows[v.index];
             const user = row.original;
 
             return (
@@ -150,19 +184,19 @@ export function DirectoryTable({
 
                 {row.getVisibleCells().map((cell) => {
                   if (cell.column.id === 'status') {
-                    const v = String(cell.getValue());
+                    const val = String(cell.getValue());
                     const statusCls =
-                      v === 'Active'
+                      val === 'Active'
                         ? styles.statusActive
-                        : v === 'Invited'
+                        : val === 'Invited'
                           ? styles.statusInvited
-                          : v === 'Suspended'
+                          : val === 'Suspended'
                             ? styles.statusSuspended
                             : styles.statusArchived;
 
                     return (
                       <div key={cell.id} className={styles.cell}>
-                        <span className={`${styles.statusPill} ${statusCls}`}>{v}</span>
+                        <span className={`${styles.statusPill} ${statusCls}`}>{val}</span>
                       </div>
                     );
                   }
@@ -173,6 +207,7 @@ export function DirectoryTable({
                     </div>
                   );
                 })}
+
                 <div className={styles.actionsCell}>
                   <Button
                     variant="secondary"
@@ -195,6 +230,8 @@ export function DirectoryTable({
               </div>
             );
           })}
+
+          {paddingBottom > 0 ? <div style={{ height: paddingBottom }} /> : null}
         </div>
       )}
     </div>
