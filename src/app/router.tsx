@@ -1,9 +1,9 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 import { LoginPage } from '../features/auth/LoginPage';
-import { InsightsPage } from '../features/insights/InsightsPage';
 import { DirectoryPage } from '../features/directory/pages/DirectoryPage';
 import { UserDetailsPage } from '../features/directory/pages/UserDetailsPage';
+import { AnalyticsPage } from '../features/analytics/AnalyticsPage';
 
 import { AppShell } from './layout/AppShell';
 import { ProtectedRoute } from './routes/ProtectedRoute';
@@ -27,10 +27,10 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'insights',
+        path: 'analytics',
         element: (
           <ProtectedRoute>
-            <InsightsPage />
+            <AnalyticsPage />
           </ProtectedRoute>
         ),
       },

@@ -11,7 +11,7 @@ interface NavItem {
 
 const NAV: NavItem[] = [
   { to: '/directory', label: 'Directory' },
-  { to: '/insights', label: 'Insights' },
+  { to: '/analytics', label: 'Analytics' },
 ];
 
 export const AppShell = () => {

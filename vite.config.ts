@@ -31,9 +31,6 @@ export default defineConfig({
 
         // MSW + mock data generation
         'src/mocks/**',
-
-        // pages that have not been implemented yet
-        'src/features/insights/**',
       ],
 
       thresholds: {

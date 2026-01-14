@@ -40,10 +40,10 @@ describe('LoginPage', () => {
     expect(screen.getByRole('button', { name: /Continue as Staff/i })).toBeInTheDocument();
   });
 
-  it('when signed in as Staff, navigates to /insights', () => {
+  it('when signed in as Staff, navigates to /analytics', () => {
     mockUser = { id: 'u-staff', name: 'Sam', role: 'Staff' };
     render(<LoginPage />);
-    expect(screen.getByTestId('navigate')).toHaveTextContent('/insights');
+    expect(screen.getByTestId('navigate')).toHaveTextContent('/analytics');
   });
 
   it('when signed in as Admin, navigates to /directory', () => {
@@ -62,13 +62,13 @@ describe('LoginPage', () => {
     expect(navigateMock).toHaveBeenCalledWith('/directory', { replace: true });
   });
 
-  it('clicking "Continue as Staff" calls loginAs and navigates to /insights', async () => {
+  it('clicking "Continue as Staff" calls loginAs and navigates to /analytics', async () => {
     const user = userEvent.setup();
     render(<LoginPage />);
 
     await user.click(screen.getByRole('button', { name: /Continue as Staff/i }));
 
     expect(loginAsMock).toHaveBeenCalledWith('Staff');
-    expect(navigateMock).toHaveBeenCalledWith('/insights', { replace: true });
+    expect(navigateMock).toHaveBeenCalledWith('/analytics', { replace: true });
   });
 });
