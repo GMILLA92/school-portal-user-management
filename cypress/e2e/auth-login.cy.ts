@@ -13,7 +13,7 @@ describe('Auth redirect flow (storage-based)', () => {
     cy.findByLabelText('Current user').should('contain.text', 'Admin');
   });
 
-  it('Staff visiting /login is redirected to /insights', () => {
+  it('Staff visiting /login is redirected to /analytics', () => {
     cy.visit('/login', {
       onBeforeLoad(win) {
         win.localStorage.setItem(
@@ -23,7 +23,7 @@ describe('Auth redirect flow (storage-based)', () => {
       },
     });
 
-    cy.location('pathname').should('eq', '/insights');
+    cy.location('pathname').should('eq', '/analytics');
     cy.findByLabelText('Current user').should('contain.text', 'Staff');
   });
 });

@@ -290,6 +290,29 @@ const generateUsers = (count: number, seed = 42): UserDTO[] => {
 
 const USERS_DB: UserDTO[] = generateUsers(200);
 
+const registrations = [
+  { month: 'Feb', registrations: 48 },
+  { month: 'Mar', registrations: 55 },
+  { month: 'Apr', registrations: 62 },
+  { month: 'May', registrations: 58 },
+  { month: 'Jun', registrations: 71 },
+  { month: 'Jul', registrations: 66 },
+  { month: 'Aug', registrations: 80 },
+  { month: 'Sep', registrations: 92 },
+  { month: 'Oct', registrations: 88 },
+  { month: 'Nov', registrations: 97 },
+  { month: 'Dec', registrations: 104 },
+  { month: 'Jan', registrations: 111 },
+];
+
+const usersByRole = [
+  { role: 'Student', count: 412 },
+  { role: 'Teacher', count: 38 },
+  { role: 'Guardian', count: 120 },
+  { role: 'Staff', count: 22 },
+  { role: 'Admin', count: 6 },
+];
+
 export const handlers = [
   http.get('/api/users', () => {
     return HttpResponse.json(USERS_DB);
@@ -315,4 +338,10 @@ export const handlers = [
 
     return HttpResponse.json(user);
   }),
+
+  http.get('/api/analytics/registrations', () => {
+    return HttpResponse.json(registrations);
+  }),
+
+  http.get('/api/analytics/users-by-role', () => HttpResponse.json(usersByRole)),
 ];

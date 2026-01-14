@@ -98,6 +98,6 @@ describe('AppShell', () => {
     );
 
     expect(screen.getByRole('link', { name: 'Directory' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Insights' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Analytics' })).toBeInTheDocument();
   });
 });
