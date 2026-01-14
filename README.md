@@ -1,6 +1,6 @@
 # School Portal — User Management
 
-A small **React + TypeScript** application that showcases a **Directory** (users list and user details) alongside an **Analytics** area with interactive charts.
+A small **React + TypeScript** application that showcases a **Directory** (users list and user details) alongside an **Analytics** area with charts.
 
 The project is meant as a starting point for a richer user-management platform in the education space.  
 Going forward, the idea is to support CSV and Excel uploads so users can bring in their own data, choose what to include, and manage it through a fast, flexible table with filters, bulk actions, and visual insights.
@@ -11,7 +11,7 @@ For now, two charts are included as simple examples of how analytics could be pr
 
 Built to demonstrate:
 - Solid frontend architecture
-- Performance optimizations
+- Performance optimisations
 - Testing strategies
 - CI quality gates
 
@@ -68,7 +68,6 @@ npm run e2e
 ```
 
 ## Application behavior and permissions
-
 The app uses role-based access control to demonstrate different permission levels.
 Authentication is intentionally simplified (storage-based) to keep the focus on UX, architecture, and stable automated tests.
 
@@ -118,7 +117,7 @@ The UI and chart components are decoupled from the data source—replacing mocks
 
 ## Testing strategy
 
-### Unit and integration testing
+### Unit testing
 
 #### Tools:
 
@@ -167,31 +166,79 @@ All checks must pass before a pull request can be merged.
 - `src/features/*` — domain modules (directory, analytics, auth)
 - `src/shared` — shared UI + utilities
 - `cypress/` — end-to-end tests
+
+## Authentication
+Authentication is intentionally simplified in this project to keep the focus on architecture, UX, and testing rather than backend integration.
+
+#### Current approach:
+
+Storage-based authentication:
+
+- Role selection is mocked to simulate different user permissions
+- This allows stable, deterministic tests for routing and access control
   
+## Accessibility and design choices
+The UI is built with accessibility in mind.
+
+- A consistent color system is used to ensure sufficient contrast and readability
+- Semantic HTML elements and clear labels are preferred wherever possible
+- Visual cues (spacing, headings, grouping) are used to make the interface easier to scan and understand
+
+While this is not a full accessibility audit, the goal is to establish good foundations that make the UI usable and easy to extend with more accessibility features over time.
+
+## Styling and theming
+Styling is handled with SCSS modules and a shared set of CSS variables.
+
+Variables are reused across components to ensure visual consistency
+
+This makes it easy to:
+
+- Adjust the theme in one place
+- Maintain consistent contrast and spacing
+- Extend the design system without duplicating values
+
+Using variables also helps keep the UI predictable and easier to reason about as the application grows.
+
+## Reusable UI components
+The project includes a small set of reusable UI components (such as Button and Select) that act as design system primitives.
+
+- Centralize styling and behavior
+- Ensure visual and interaction consistency
+- Reduce duplication across features
+- Improve accessibility by default
+
+Variants (e.g. primary, danger, ghost) are handled at the component level, allowing features to remain focused on behavior rather than styling.
+
+This approach makes it easier to scale the UI while keeping a consistent look and feel.
+
 ## Future improvements
-
-### Authentication
-
-- Real login flow
-- Replace storage-based auth with JWT-based auth
 
 ### Data layer
 - Replace mocked query hooks with real API endpoints
 - Add request retry/backoff and better error telemetry
 
-### Analytics and tracking
+### Data persistence and UX
+- Persist applied filters per user
+- Restore table state (filters, sorting, pagination) between sessions
 
-- Collect page views and user events
+## Authentication and infrastructure
+- Implement a real login flow
+- Token-based authentication (JWT or similar)
+- Add Docker support for:
+  - Local development consistency
+  - Easier CI/CD setup
+  - Production-ready deployment pipelines
+  
+### Analytics and tracking
+- Collect page views and user interactions
 - Track filters, navigation, and edit attempts
-- Batched and retry-safe analytics ingestion
+- Store analytics events in a backend service
 
 ### Directory and analytics expansion
-
 - Richer user profiles
 - Additional charts (status trends, cohorts, active vs invited)
 
 ### Data import
-
 - CSV and Excel upload
 - Schema validation
 - Visualization of imported data in tables and charts
