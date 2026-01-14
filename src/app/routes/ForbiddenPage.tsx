@@ -24,7 +24,9 @@ export const ForbiddenPage = () => {
       </p>
 
       <div className={styles.actions}>
-        <Button onClick={() => void navigate(-1)}>Go back</Button>
+        <Button variant="primary" onClick={() => void navigate(-1)}>
+          Go back
+        </Button>
         <Button variant="primary" onClick={handleSwitchRole}>
           Switch role
         </Button>

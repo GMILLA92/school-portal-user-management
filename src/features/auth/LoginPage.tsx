@@ -7,7 +7,7 @@ import type { AuthRole } from './types';
 
 const ROLES: AuthRole[] = ['Admin', 'Teacher', 'Staff'];
 
-const getHomeForRole = (role: AuthRole) => (role === 'Admin' ? '/directory' : '/insights');
+const getHomeForRole = (role: AuthRole) => (role === 'Staff' ? '/insights' : '/directory');
 
 export const LoginPage = () => {
   const { user, loginAs } = useAuth();
