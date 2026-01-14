@@ -8,16 +8,34 @@ export default defineConfig({
     globals: true,
     setupFiles: './src/test/setupTests.ts',
     css: true,
-
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov', 'html'],
+
+      include: ['src/**/*.{ts,tsx}'],
+
       exclude: [
         'src/main.tsx',
+        'src/test/**',
+
+        // type-only / declarations
         'src/**/*.d.ts',
-        'src/**/*.stories.*',
-        'src/**/__mocks__/**',
+        'src/**/types.ts',
+
+        // barrel files
+        'src/**/index.ts',
+
+        // app wiring (covered better by e2e)
+        'src/app/router.tsx',
+        'src/app/AppProviders.tsx',
+
+        // MSW + mock data generation
+        'src/mocks/**',
+
+        // pages that have not been implemented yet
+        'src/features/insights/**',
       ],
+
       thresholds: {
         lines: 80,
         functions: 80,
