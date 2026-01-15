@@ -99,7 +99,7 @@ The role can be changed via mocked authentication logic to simulate different pe
 
 ## Role model: identity vs privileges
 The app uses a simple role model inspired by real-world permission systems.
-Teacher and Staff are primary roles (a user’s identity). Admin is a privilege, not a primary role.
+Teacher and Staff are primary roles (a user’s identity). Admin is a privilege, but can also be a primary role.
 
 Primary roles are mutually exclusive (a user is either Teacher or Staff). Admin is additive, granting extra permissions on top of the primary role.
 
@@ -155,7 +155,7 @@ The app uses TanStack React Query for async data handling and caching.
 - Request caching and deduplication
 - Clear data lifecycle management
 
-The UI and chart components are decoupled from the data source—replacing mocks with real API endpoints should not require component changes.
+The UI and chart components are fully decoupled from the data source, so replacing mock data with live API endpoints requires no changes to the components.
 
 ## Testing strategy
 
@@ -216,7 +216,6 @@ Authentication is intentionally simplified in this project to keep the focus on 
 
 Storage-based authentication:
 - Role selection is mocked to simulate different user permissions
-- This allows stable, deterministic tests for routing and access control
   
 ## Accessibility and design choices
 The UI is built with accessibility in mind.
@@ -230,19 +229,15 @@ While this is not a full accessibility audit, the goal is to establish good foun
 ## Styling and theming
 Styling is handled with SCSS modules and a shared set of CSS variables.
 
-Variables are reused across components to ensure visual consistency
+Variables are reused across components to ensure visual consistency.
 
 This makes it easy to:
-
 - Adjust the theme in one place
 - Maintain consistent contrast and spacing
 - Extend the design system without duplicating values
 
-Using variables also helps keep the UI predictable and easier to reason about as the application grows.
-
 ## Reusable UI components
-The project includes a small set of reusable UI components (such as Button and Select) that act as design system primitives.
-
+The project includes a small set of reusable UI components (Button and Select for now) that act as design system primitives.
 - Centralize styling and behavior
 - Ensure visual and interaction consistency
 - Reduce duplication across features
@@ -264,7 +259,7 @@ This approach makes it easier to scale the UI while keeping a consistent look an
 - Persist applied filters per user
 - Restore table state (filters, sorting, pagination) between sessions
 
-## Authentication and infrastructure
+### Authentication and infrastructure
 - Implement a real login flow
 - Token-based authentication
 - Add Docker support for:
@@ -282,7 +277,7 @@ This approach makes it easier to scale the UI while keeping a consistent look an
 - Additional charts (cohorts, active vs invited...)
 
 ### Project Goal: Data import
-- CSV and Excel upload
-- Schema validation
+- CSV and Excel upload to import the data
+- Schema validation and customised import
 - Visualization of imported data in tables and charts
 
